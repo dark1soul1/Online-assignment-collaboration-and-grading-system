@@ -2,7 +2,7 @@ import { useUserStore } from '../store/index';
 
 export default (router) => {
     router.beforeEach(async (to, from, next) => {
-      const authStore = useUserStore()
+      /* const authStore = useUserStore();
       
       // 1. 初始化用户状态
       if (!authStore.isInitialized) {
@@ -25,7 +25,7 @@ export default (router) => {
           ? '/teacher/assignments/list' 
           : '/student/submit'
         return next(defaultRoute)
-      }
+      } */
   
       next()
     })
