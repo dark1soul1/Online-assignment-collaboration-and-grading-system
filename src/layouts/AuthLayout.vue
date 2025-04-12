@@ -11,22 +11,93 @@
       </div>
       <div class="auth-main">
         <div class="con-col-1">
-          数据看板
+          <!-- 数据看板 -->
+          <div class="dashboard-card">
+            <h3>实时统计</h3>
+            <div class="stats-item">
+              <span class="stat-number">2,345</span>
+              <span class="stat-label">今日活跃用户</span>
+            </div>
+          </div>
         </div>
         <div class="con-col-2">
-          公告轮播
+          <!-- 公告轮播 -->
+          <div id="statsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              <button v-for="(_, index) in carouselItems" 
+                     :key="index"
+                     type="button" 
+                     :data-bs-target="'#statsCarousel'" 
+                     :data-bs-slide-to="index" 
+                     :class="{ active: index === 0 }"></button>
+            </div>
+  
+            <div class="carousel-inner">
+              <div v-for="(item, index) in carouselItems" 
+                  :key="item.id"
+                  class="carousel-item" 
+                  :class="{ active: index === 0 }">
+                <img :src="item.image" class="d-block w-100" :alt="item.title">
+                <div class="carousel-caption">
+                  <h2>{{ item.value }}</h2>
+                  <p>{{ item.title }}</p>
+                </div>
+              </div>
+            </div>
+  
+            <button class="carousel-control-prev" type="button" data-bs-target="#statsCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#statsCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
         </div>
         <div class="con-col-1"><Login /><Register /></div>
       </div>
     <footer class="auth-footer">
-      <p>© xxxxxxxx</p>
+      <p>© 华中农业大学 软件工程团队</p>
     </footer>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import Login from '../views/auth/LoginMod.vue';
 import Register from '../views/auth/RegisterMod.vue';
+import img1 from '../assets/img/1.png';
+import img2 from '../assets/img/2.png';
+import img3 from '../assets/img/3.png';
+import img4 from '../assets/img/4.png';
+
+const carouselItems = ref([
+  {
+    id: 1,
+    image: img1,
+    title: '在线用户',
+    value: '3,456'
+  },
+  {
+    id: 2,
+    image: img2,
+    title: '评测次数',
+    value: '9,498,478'
+  },
+  {
+    id: 3,
+    image: img3,
+    title: '代码行数',
+    value: '22,782,867'
+  },
+  {
+    id: 4,
+    image: img4,
+    title: '在线课程',
+    value: '23'
+  }
+])
 </script>
 
 <style scoped>
@@ -48,6 +119,7 @@ import Register from '../views/auth/RegisterMod.vue';
 .auth-main {
   display: flex;
   flex-wrap: wrap;
+  padding: 20px;
 }
 
 .auth-footer {
@@ -66,6 +138,8 @@ import Register from '../views/auth/RegisterMod.vue';
   flex:0 0 50%;
   max-width: 50%;
 }
+
+
 
 .slogan-wrap {
   margin-top: 16px;
@@ -138,5 +212,53 @@ import Register from '../views/auth/RegisterMod.vue';
 
 
 
+.carousel {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-item {
+  height: 400px;
+  background: linear-gradient(135deg, rgba(64, 158, 255, 0.1), rgba(64, 158, 255, 0.05));
+}
+
+.carousel-item img {
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.carousel-caption {
+  background: transparent;
+  padding: 1.5rem;
+  border-radius: 8px;
+  right: 15%;
+  left: 15%;
+  bottom: 2rem;
+  color: #2c3e50;
+}
+
+.carousel-caption h2 {
+  font-size: 3rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 992px) {
+  .con-col-2 {
+    order: -1;
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .carousel-item {
+    height: 300px;
+  }
+  
+  .carousel-caption h2 {
+    font-size: 2rem;
+  }
+}
 
 </style>
