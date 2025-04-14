@@ -1,25 +1,25 @@
 <template>
-    <div class="auth-layout">
-      <header class="auth-header">
-        <h1>在线作业协作及评分系统</h1>
-      </header>
       <div class="slogan-wrap">
-        <span class="slogan-text animate-float">
-          <span class="gradient-text">Grade Together,</span>
-          <span class="highlight-text">Grow Together</span>
-        </span>
-      </div>
+          <span class="slogan-text animate-float">
+            <span class="gradient-text">Grade Together,</span>
+            <span class="highlight-text">Grow Together</span>
+          </span>
+        </div>
       <div class="auth-main">
-        <div class="con-col-1">
-          <!-- 数据看板 -->
-          <div class="dashboard-card">
-            <h3>实时统计</h3>
-            <div class="stats-item">
-              <span class="stat-number">2,345</span>
-              <span class="stat-label">今日活跃用户</span>
+          <div class="con-col-1">
+            <div v-for="item in carouselItems"
+          :key="item.id"
+          >
+            <!-- 数据看板 -->
+            <div class="dashboard-card">
+              <div class="stats-item">
+                <span class="stat-number">{{item.value}}</span>
+                <span class="stat-label">{{item.title}}</span>
+              </div>
             </div>
           </div>
         </div>
+        
         <div class="con-col-2">
           <!-- 公告轮播 -->
           <div id="statsCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -55,16 +55,18 @@
             </button>
           </div>
         </div>
-        <div class="con-col-1"><Login /><Register /></div>
+        <div class="con-col-1">
+          <div class="auth-container">
+          <Login v-if="!userStore.isRegister" />
+          <Register v-if="userStore.isRegister" />
+        </div>
+        </div>
       </div>
-    <footer class="auth-footer">
-      <p>© 华中农业大学 软件工程团队</p>
-    </footer>
-  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { useUserStore } from '../store';
 import Login from '../views/auth/LoginMod.vue';
 import Register from '../views/auth/RegisterMod.vue';
 import img1 from '../assets/img/1.png';
@@ -72,6 +74,7 @@ import img2 from '../assets/img/2.png';
 import img3 from '../assets/img/3.png';
 import img4 from '../assets/img/4.png';
 
+const userStore = useUserStore();
 const carouselItems = ref([
   {
     id: 1,
@@ -101,44 +104,34 @@ const carouselItems = ref([
 </script>
 
 <style scoped>
-.auth-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
-
-.auth-header {
-  padding: 24px 20px;
-  background-color: #409eff;
-  color: white;
-  text-align: center;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-}
-
 .auth-main {
   display: flex;
   flex-wrap: wrap;
+  gap:5%;
   padding: 20px;
 }
 
-.auth-footer {
-  padding: 10px;
-  background-color: #409eff;
-  color: white;
-  text-align: center;
-}
-
 .con-col-1 {
-  flex:0 0 25%;
-  max-width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex:0 0 22.5%;
+  max-width: 22.5%;
 }
 
 .con-col-2 {
-  flex:0 0 50%;
-  max-width: 50%;
+  flex:0 0 45%;
+  max-width: 45%;
 }
 
+
+.dashboard-card {
+  border: 1px solid #2c3e50;
+  border-radius: 1vh;
+  padding:  16px ;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
 
 .slogan-wrap {
@@ -261,4 +254,12 @@ const carouselItems = ref([
   }
 }
 
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items:baseline;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
 </style>

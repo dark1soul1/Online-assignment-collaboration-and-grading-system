@@ -1,2 +1,3 @@
-<template>教师端布局 
+<template>
+    <div>教师端布局</div>
 </template>

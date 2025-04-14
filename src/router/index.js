@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-  { path: '/auth', name: 'Auth', component:()=>import('../layouts/AuthLayout.vue'),},
-  
-  { path: '/', redirect: '/auth' }
+  { path: '/home', name: 'Home', component:()=>import('../layouts/BasicLayout.vue'),},
+  { path: '/theme',name: 'Theme', component:()=>import('../components/ThemeToggler.vue'),},
+  { path: '/', redirect: '/home' }
 ];
 
 const router = createRouter({
