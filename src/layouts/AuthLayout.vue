@@ -126,7 +126,7 @@ const carouselItems = ref([
 
 
 .dashboard-card {
-  border: 1px solid #2c3e50;
+  border: 1px solid #fff;
   border-radius: 1vh;
   padding:  16px ;
   background-color: #fff;

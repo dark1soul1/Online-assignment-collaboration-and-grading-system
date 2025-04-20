@@ -8,7 +8,8 @@ import 'element-plus/dist/index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './assets/styles/reset.css';
-import './assets/styles/index.scss';
+import './assets/styles/index.css';
+import './components/ThemeToggler/index.scss';
 
 const pinia = createPinia();
 const app = createApp(App);

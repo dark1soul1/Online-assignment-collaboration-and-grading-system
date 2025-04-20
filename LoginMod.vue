@@ -22,7 +22,7 @@
 import { ref } from 'vue';
 import { useUserStore } from '../../store';
 import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
-const loginFormRef = ref(null);
+
 const userStore = useUserStore();
 let isRegister = userStore.isRegister;
 
@@ -43,6 +43,9 @@ const rules = {
     { pattern: /^(?=.*\d)(?=.*[a-zA-Z]).{6,20}$/, message: '密码必须包含字母和数字', trigger: 'blur' }
   ]
 };
+
+const loginFormRef = ref(null);
+
 const handleLogin = () => {
   loginFormRef.value.validate((valid) => {
     if (valid) {
@@ -52,50 +55,6 @@ const handleLogin = () => {
     }
   });
 };
-
-
-/* 
-const handleSubmit = () => {
-  if (loginFormRef.value && loginFormRef.value.validate) {
-    loginFormRef.value.validate(async valid => {
-      if (valid) {
-        try {
-          await handleLogin();
-        } catch (error) {
-          ElMessage.error(error.value);
-        }
-      } else {
-        console.log('登陆失败!');
-      }
-    });
-  }
-};
-
-const handleLogin = async () => {
-  const responseBody = {
-    name: loginForm.value.username,
-    password: loginForm.value.password,
-  };
-  let response = await login(responseBody);
-  console.log('Response:', response);
-  if (response.data.code===200) {
-    userStore.logout();
-    userStore.switchToCombination();
-    userStore.isAllow=true;
-    userStore.password=loginForm.value.password;
-    userStore.updateUserInfo({
-      id:response.data.data.id,
-      token: response.data.data.token,
-      name: response.data.data.name
-    });
-    ElMessage.success('登录成功');
-  } else {
-    throw new Error(response.msg || '登录失败');
-  }
-};
-
-
-*/
 </script>
 
 <style scoped>

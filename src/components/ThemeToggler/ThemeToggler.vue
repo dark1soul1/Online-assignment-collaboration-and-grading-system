@@ -11,9 +11,9 @@
 
 <script setup lang="ts">
 import { ref, watch, useAttrs } from 'vue';
-import { isDark, toggleDark } from '../utils/helper';
-import DarkIcon from '../assets/icons/darkIcon.vue';
-import LightIcon from '../assets/icons/lightIcon.vue';
+import { isDark, toggleDark } from './helper';
+import DarkIcon from './darkIcon.vue';
+import LightIcon from './lightIcon.vue';
 
 defineOptions({
   name: 'ThemeToggler'

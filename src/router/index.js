@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   { path: '/home', name: 'Home', component:()=>import('../layouts/BasicLayout.vue'),},
-  { path: '/theme',name: 'Theme', component:()=>import('../components/ThemeToggler.vue'),},
+
   { path: '/', redirect: '/home' }
 ];
 

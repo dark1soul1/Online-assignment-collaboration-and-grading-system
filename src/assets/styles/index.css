@@ -1,0 +1,8 @@
+/* 处理el-dialog引发的内联样式问题 */
+body {
+    width: 100% !important;
+}
+
+strong {
+    font-weight: bolder;
+}

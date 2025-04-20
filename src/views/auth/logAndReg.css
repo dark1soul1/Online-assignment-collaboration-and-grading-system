@@ -1,3 +1,16 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+@keyframes slideIn {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
 .auth-box {
   background-color: #fff;
   padding: 2rem;
@@ -6,6 +19,7 @@
   width: 100%;
   max-width: 400px;
   text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
 .auth-title {
@@ -66,4 +80,10 @@
 
 .auth-switch a:hover {
   text-decoration: underline;
+}
+
+/* 处理那个该死的输入框色块问题 */
+.el-input, .el-select {
+  width: 100%;
+  transition: all 0.3s ease-in-out;
 }

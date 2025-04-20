@@ -2,7 +2,7 @@
 <div class="layout ">
     <header class="layout-header">
       <h1>在线作业协作及评分系统</h1>
-      <tButton />
+      <!-- <tButton /> -->
     </header>
     <div class="layout-main">
         <component :is="currentComponent" />
@@ -14,14 +14,17 @@
 </template>
 
 <script setup>
-import {computed} from 'vue';
-import tButton from '../components/ThemeToggler.vue';
+import {ref,computed} from 'vue';
+import { useUserStore } from '../store';
+import tButton from '../components/ThemeToggler/ThemeToggler.vue';
 import auth from './AuthLayout.vue';
 import student from './StudentLayout.vue';
 import teacher from './TeacherLayout.vue';
 
+const userstore=useUserStore();
+
 const currentComponent=computed(()=>{
-    switch("auth"){
+    switch(userstore.cur_component){
         case 'auth':
             return auth;
         case 'student':
@@ -47,7 +50,7 @@ const currentComponent=computed(()=>{
   justify-content: space-between;
   align-items: center;
   padding: 24px 20px;
-  background-color: #409eff;
+  background: linear-gradient(to bottom, #409eff, #a0cfff);
   color: white;
   box-shadow:0 2px 8px rgba(0,0,0,0.1);
 }
@@ -61,7 +64,7 @@ const currentComponent=computed(()=>{
   
 .layout-footer {
     padding: 10px;
-    background-color: #409eff;
+    background: linear-gradient(to bottom, #f5f5f5,#409eff );
     color: white;
     text-align: center;
 }
