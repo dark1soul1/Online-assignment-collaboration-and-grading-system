@@ -41,7 +41,7 @@ const currentComponent=computed(()=>{
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 80vh;
   background-color: #f5f5f5;
 }
   
@@ -58,12 +58,12 @@ const currentComponent=computed(()=>{
 .layout-main {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 86vh;
     padding: 20px;
 }
   
 .layout-footer {
-    padding: 10px;
+    padding: 24px 20px;
     background: linear-gradient(to bottom, #f5f5f5,#409eff );
     color: white;
     text-align: center;

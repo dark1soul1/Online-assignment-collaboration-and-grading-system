@@ -39,6 +39,7 @@ import HomePage from '../components/StudentComs/HomePage.vue';
 import ProjectInfo from '../components/StudentComs/ProjectInfo.vue';
 import CollaborationCom from '../components/StudentComs/CollaborationCom.vue';
 import CommunicationCom from '../components/StudentComs/CommunicationCom.vue';
+import userProfile from '../components/userProfile.vue';
 
 const userStore = useUserStore();
 const whichIsActive=ref(0); 
@@ -48,7 +49,8 @@ const items = ref([
   { label: '首页',  action: () =>whichIsActive.value=0 },
   { label: '项目信息',  action: () =>whichIsActive.value=1 },
   { label: '在线协作',  action: () =>whichIsActive.value=2 },
-  { label: '在线沟通',  action: () =>whichIsActive.value=3 }
+  { label: '在线沟通',  action: () =>whichIsActive.value=3 },
+  { label: '个人中心',  action: () =>whichIsActive.value=4 }
 ]);
 
 const currentComponent=computed(()=>{
@@ -61,6 +63,8 @@ const currentComponent=computed(()=>{
             return CollaborationCom;
         case 3:
             return CommunicationCom;
+        case 4:
+            return userProfile;
     }
 })
 

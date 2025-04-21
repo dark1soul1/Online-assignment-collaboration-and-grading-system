@@ -6,7 +6,7 @@
           </span>
         </div>
       <div class="auth-main">
-          <div class="con-col-1">
+          <div class="con-col-1 scrollable-dashboard">
             <div v-for="item in carouselItems"
           :key="item.id"
           >
@@ -16,6 +16,7 @@
                 <span class="stat-number">{{item.value}}</span>
                 <span class="stat-label">{{item.title}}</span>
               </div>
+              <div ref="chartRef" :id="'chart-' + item.id" class="chart" />
             </div>
           </div>
         </div>
@@ -57,23 +58,26 @@
         </div>
         <div class="con-col-1">
           <div class="auth-container">
-          <Login v-if="!userStore.isRegister" />
-          <Register v-if="userStore.isRegister" />
-        </div>
+            <Login v-if="!userStore.isRegister" />
+            <Register v-if="userStore.isRegister" />
+          </div>
         </div>
       </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted,nextTick } from 'vue';
 import { useUserStore } from '../store';
-import Login from '../views/auth/LoginMod.vue';
-import Register from '../views/auth/RegisterMod.vue';
+import * as echarts from 'echarts';
+
+import Login from '../components/auth/LoginMod.vue';
+import Register from '../components/auth/RegisterMod.vue';
 import img1 from '../assets/img/1.png';
 import img2 from '../assets/img/2.png';
 import img3 from '../assets/img/3.png';
 import img4 from '../assets/img/4.png';
 
+const chartRef = ref([]);
 const userStore = useUserStore();
 const carouselItems = ref([
   {
@@ -101,6 +105,32 @@ const carouselItems = ref([
     value: '23'
   }
 ])
+
+
+onMounted(async () => {
+  await nextTick();
+  carouselItems.value.forEach((item, index) => {
+    const chartDom = document.getElementById('chart-' + item.id);
+    const myChart = echarts.init(chartDom,'wonderland');
+    const option = {
+      series : [
+                {
+                    name: '访问来源',
+                    type: 'pie',    // 设置图表类型为饼图
+                    radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+                    data:[          // 数据数组，name 为数据项名称，value 为数据项值
+                        {value:235, name:'图块1'},
+                        {value:274, name:'图块2'},
+                        {value:310, name:'图块3'},
+                        {value:335, name:'图块4'},
+                        {value:400, name:'图块5'}
+                    ]
+                }
+            ]
+    };
+    myChart.setOption(option);
+  });
+});
 </script>
 
 <style scoped>
@@ -119,6 +149,17 @@ const carouselItems = ref([
   max-width: 22.5%;
 }
 
+.scrollable-dashboard {
+  height: 47vh; 
+  overflow-y: auto; 
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .con-col-2 {
   flex:0 0 45%;
   max-width: 45%;
@@ -128,17 +169,19 @@ const carouselItems = ref([
 .dashboard-card {
   border: 1px solid #fff;
   border-radius: 1vh;
-  padding:  16px ;
+  padding: 16px;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
+.chart {
+  width: 100%;
+  height: 120px;
+}
 
 .slogan-wrap {
   margin-top: 16px;
   position: relative;
 }
-
 .slogan-text {
   display: inline-block;
   font-family: 'Segoe UI', sans-serif;
