@@ -120,7 +120,7 @@ const options = Array.from({ length: 1000 }).map((_, idx) => ({
 </script>
 
 <style scoped>
-@import './styles/stuAndTeaNav.css';
+@import '../assets//styles//stuAndTeaNav.css';
 .nav-search {
   position: relative;
   border: 1px solid #c9c9c9;

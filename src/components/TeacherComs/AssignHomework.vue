@@ -14,6 +14,14 @@
         </el-radio-group>
       </el-form-item>
 
+      <el-form-item label="开放日期">
+        <el-date-picker
+          v-model="form.openDate"
+          type="datetime"
+          placeholder="选择开放日期时间"
+        />
+      </el-form-item>
+
       <el-form-item label="截止日期">
         <el-date-picker
           v-model="form.deadline"
@@ -48,20 +56,45 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import { createWork } from '../../api/index';
 
 const form = ref({
   title: '',
   type: 'text',
+  openDate: '',
   deadline: '',
   description: '',
   gradingRules: ''
 })
 
-const submitForm = () => {
-  ElMessage.success('作业发布成功！')
-  // 这里可以添加提交到后端的逻辑
+const submitForm = async () => {
+  try {
+    const response = await createWork({
+      title: form.value.title,
+      type: form.value.type,
+      openAt: form.value.openDate,
+      deadline: form.value.deadline,
+      description: form.value.description,
+      gradingRules: form.value.gradingRules
+    })
+    if (response.code === 0) {
+      ElMessage.success('作业发布成功！')
+      form.value = {
+        title: '',
+        type: 'text',
+        openDate: '',
+        deadline: '',
+        description: '',
+        gradingRules: ''
+      }
+    } else {
+      ElMessage.error(response.msg || '作业发布失败')
+    }
+  } catch (error) {
+    ElMessage.error('网络错误，请稍后重试')
+  }
 }
 </script>
 

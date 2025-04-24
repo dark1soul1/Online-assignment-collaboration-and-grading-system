@@ -91,7 +91,7 @@ const handleLogin = async () => {
   console.log('Response:', response);
   if (response.data.code===200) {
     if(response.data.data.role==='teacher')router.push(`/teacher/assign-homework`);
-    userStore.handleLogin({...responseBody,...response.data.data});
+    userStore.handleLogin(response.data);
     ElMessage.success('登录成功');
   } else {
     throw new Error(response.msg || '登录失败');

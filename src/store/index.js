@@ -31,6 +31,10 @@ export const useUserStore=defineStore('user',{
             this.password=value.password;
             this.role=value.role;
             this.id=value.userId;
+            this.hobbies=value.hobbies;
+            this.signature=value.signature;
+            this.email=value.email;
+            this.phone=value.phone;
             if(value.role==='学生')this.cur_component='student';
             else if(value.role==='教师')this.cur_component='teacher';
         },

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TeacherLayout from '../layouts/TeacherLayout.vue'
-import AssignHomework from '../view/teacher/AssignHomework.vue'
-import GradeHomework from '../view/teacher/GradeHomework.vue'
-import Dashboard from '../view/teacher/Dashboard.vue'
+import AssignHomework from '../components/TeacherComs/AssignHomework.vue'
+import GradeHomework from '../components/TeacherComs/GradeHomework.vue'
+import Dashboard from '../components/TeacherComs/Dashboard.vue'
 import UserProfile from '../components/userProfile.vue'
 import TeamManage from '../components/TeacherComs/teamManage.vue'
 

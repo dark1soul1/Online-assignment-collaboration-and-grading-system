@@ -17,6 +17,12 @@
           <el-tab-pane label="修改个性信息" name="userForm">
             <el-card shadow="always" class="profile-card">
               <el-form :model="userForm" label-width="100px">
+                <el-form-item label="性别">
+                  <el-select v-model="userForm.sex" placeholder="请选择你的性别">
+                    <el-option label="男" value="1" />
+                    <el-option label="女" value="2" />
+                  </el-select>
+                </el-form-item>
                 <el-form-item label="个性签名">
                   <el-input v-model="userForm.signature"></el-input>
                 </el-form-item>
@@ -75,6 +81,7 @@ import { updatePersonalInfo } from '../api';
 const userStore = useUserStore();
 const activeTab = ref('basicInfo');
 const integer=computed(() => userStore.id);
+const radio1=ref(userStore.sex);
 
 const userInfo = reactive({
   id: userStore.id,
@@ -89,6 +96,7 @@ const userInfo = reactive({
 });
 
 const userForm = reactive({
+  sex: userStore.sex,
   signature: userStore.signature,
   hobbies: userStore.hobbies
 });

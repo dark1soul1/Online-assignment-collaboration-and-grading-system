@@ -110,6 +110,7 @@ const editorRef = shallowRef();
 const valueHtml = ref('<p></p>');
 const toolbarConfig = {};
 const editorConfig = { placeholder: '请输入内容...' };
+const mode = ref('default'); // 新增：定义 mode 属性
 
 // 代码编辑器相关
 const codeContent = ref('// 请输入代码...');

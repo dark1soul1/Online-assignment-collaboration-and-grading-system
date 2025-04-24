@@ -44,22 +44,13 @@
         <el-col :span="12">
           <el-card shadow="hover">
             <div class="chart-title">成绩分布</div>
-            <div class="chart-container">
-              <!-- 这里可以接入ECharts或其他图表库 -->
-              <div class="mock-chart" style="height: 300px; background: #f5f7fa; display: flex; justify-content: center; align-items: center;">
-                成绩分布图表
-              </div>
-            </div>
+            <div class="chart-container" ref="scoreChart"></div>
           </el-card>
         </el-col>
         <el-col :span="12">
           <el-card shadow="hover">
             <div class="chart-title">提交时间分布</div>
-            <div class="chart-container">
-              <div class="mock-chart" style="height: 300px; background: #f5f7fa; display: flex; justify-content: center; align-items: center;">
-                提交时间图表
-              </div>
-            </div>
+            <div class="chart-container" ref="timeChart"></div>
           </el-card>
         </el-col>
       </el-row>
@@ -89,33 +80,63 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
 
-const recentHomework = ref([
-  {
-    title: 'Vue3组件开发',
-    deadline: '2023-05-15',
-    submitted: '24/30',
-    avgScore: '78.5'
-  },
-  {
-    title: 'Vue Router实践',
-    deadline: '2023-05-08',
-    submitted: '28/30',
-    avgScore: '82.3'
-  },
-  {
-    title: 'Pinia状态管理',
-    deadline: '2023-05-01',
-    submitted: '30/30',
-    avgScore: '85.7'
-  }
-])
+const scoreChart = ref(null);
+const timeChart = ref(null);
 
-const viewDetail = (row) => {
-  // 查看详情逻辑
-  console.log('查看作业详情:', row.title)
-}
+onMounted(() => {
+  // 初始化成绩分布图表
+  const scoreChartInstance = echarts.init(scoreChart.value);
+  const scoreOption = {
+    title: {
+      text: '成绩分布',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'item'
+    },
+    series: [
+      {
+        name: '成绩',
+        type: 'pie',
+        radius: '50%',
+        data: [
+          { value: 30, name: '90-100分' },
+          { value: 20, name: '80-89分' },
+          { value: 15, name: '70-79分' },
+          { value: 10, name: '60-69分' },
+          { value: 5, name: '60分以下' }
+        ]
+      }
+    ]
+  };
+  scoreChartInstance.setOption(scoreOption);
+
+  // 初始化提交时间分布图表
+  const timeChartInstance = echarts.init(timeChart.value);
+  const timeOption = {
+    title: {
+      text: '提交时间分布',
+      left: 'center'
+    },
+    xAxis: {
+      type: 'category',
+      data: ['00:00', '06:00', '12:00', '18:00', '24:00']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        data: [10, 20, 30, 40, 50],
+        type: 'bar'
+      }
+    ]
+  };
+  timeChartInstance.setOption(timeOption);
+});
 </script>
 
 <style scoped>
@@ -151,6 +172,10 @@ const viewDetail = (row) => {
 .chart-title {
   margin-bottom: 15px;
   font-weight: bold;
+}
+
+.chart-container {
+  height: 300px;
 }
 
 .homework-list {
