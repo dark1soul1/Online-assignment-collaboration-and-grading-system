@@ -6,6 +6,16 @@
       </li>
     </ul>
     <div class="nav-avatar">
+      <div class="nav-search"> 
+            <input  
+            class="search-input" 
+            v-model="searchQuery" 
+            @keyup.enter="performSearch" 
+            placeholder="加入谁的团队?">
+            <button class="search-button" @click="performSearch">
+                <img src="../assets//icons//searchIcon.jpg" class="icon-picture" alt="">
+            </button>
+      </div>
       <el-avatar :icon="UserFilled" />
       <el-dropdown class="el-dropdown-container">
         <span class="el-dropdown-link">
@@ -23,7 +33,7 @@
       placeholder="请选择你的团队"
       size="large"
       style="width: 240px"
-    />
+      />
     </div>
   </nav>
   <div class="student-main">
@@ -35,22 +45,27 @@
 import { ref,computed } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
 import { useUserStore } from '../store';
+import { ElMessage } from 'element-plus';
 import HomePage from '../components/StudentComs/HomePage.vue';
 import ProjectInfo from '../components/StudentComs/ProjectInfo.vue';
 import CollaborationCom from '../components/StudentComs/CollaborationCom.vue';
 import CommunicationCom from '../components/StudentComs/CommunicationCom.vue';
 import userProfile from '../components/userProfile.vue';
+import searchDeatails from '../components/StudentComs/searchDeatails.vue';
 
 const userStore = useUserStore();
-const whichIsActive=ref(0); 
+const whichIsActive=computed(()=>{
+  return userStore.cur_module;
+}) 
+const searchQuery = ref('');
 const userName=ref(userStore.name);
 
 const items = ref([
-  { label: '首页',  action: () =>whichIsActive.value=0 },
-  { label: '项目信息',  action: () =>whichIsActive.value=1 },
-  { label: '在线协作',  action: () =>whichIsActive.value=2 },
-  { label: '在线沟通',  action: () =>whichIsActive.value=3 },
-  { label: '个人中心',  action: () =>whichIsActive.value=4 }
+  { label: '首页' ,     action: () =>userStore.cur_module=0 },
+  { label: '项目信息',  action: () =>userStore.cur_module=1 },
+  { label: '在线协作',  action: () =>userStore.cur_module=2 },
+  { label: '在线沟通',  action: () =>userStore.cur_module=3 },
+  { label: '个人中心',  action: () =>userStore.cur_module=4 }
 ]);
 
 const currentComponent=computed(()=>{
@@ -65,8 +80,35 @@ const currentComponent=computed(()=>{
             return CommunicationCom;
         case 4:
             return userProfile;
+        case 5:
+            return searchDeatails;
+        default:
+            return HomePage;
     }
 })
+
+const performSearch=()=>{
+  let trimmedQuery = searchQuery.value.trim();
+  if (!trimmedQuery) {
+    ElMessage.warning('搜索内容不能为空');
+    return;
+  }
+  const minLength = 1;
+  if (trimmedQuery.length < minLength) {
+    ElMessage.warning(`搜索内容至少需要 ${minLength} 个字符`);
+    return;
+  }
+  const allowedPattern = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/;
+  if (!allowedPattern.test(trimmedQuery)) {
+    ElMessage.warning('仅允许字母、数字和中文字符');
+    return;
+  }
+  searchQuery.value=trimmedQuery;
+  console.log("searchQuery:"+searchQuery.value);
+  userStore.switchToSearchDetails(searchQuery);
+  ElMessage('正在搜索:'+trimmedQuery);
+};
+
 
 const initials = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 
@@ -78,59 +120,43 @@ const options = Array.from({ length: 1000 }).map((_, idx) => ({
 </script>
 
 <style scoped>
-.navbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  padding: .5rem 1rem;
-  margin: -20px;
-  color: #000;
-  background: linear-gradient(to bottom, #a0cfff,#f5f5f5);
+@import './styles/stuAndTeaNav.css';
+.nav-search {
+  position: relative;
+  border: 1px solid #c9c9c9;
+  padding: 0 33px 0 11px;
+  line-height: 36px;
+  height: 40px;
+  margin-right: 40px;
+  border-radius: 3px;
+  background-color: #fff;
 }
-.navbar-nav {
-  display: flex;
-  flex-direction: row;
-  padding-left: 0;
-  margin-bottom: 0;
-  list-style: none;
-  margin-right: auto;
-}
-.nav-avatar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  height: 50px;
-}
-
-.nav-action {
-  font-weight: 800 !important;
-}
-.nav-link{
-  display: block;
-  padding: .5rem 1rem;
-}
-
-.el-dropdow-link {
-  cursor: pointer;
-}
-.el-dropdown-link:focus,
-.el-dropdown-link:hover {
+.search-input {
+  width: 174px;
+  height: 36px;
+  font-size: 14px;
+  border: 0;
+  background: transparent;
   outline: none;
-  border: none;
+  padding: 0 10px;
 }
-
-.example-showcase .el-select-v2 {
-  margin-right: 20px;
+.search-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  width: 38px;
+  height: 35px;
+  overflow: visible;
+  background: transparent;
 }
-
-.student-main {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-top: 30px;
-  padding-right:15px;
-  padding-left: 15px;
+.icon-picture {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  margin-top: -8px;
+  width: 16px;
+  height: 16px;
+  background-position: 0 -40px;
 }
 </style>

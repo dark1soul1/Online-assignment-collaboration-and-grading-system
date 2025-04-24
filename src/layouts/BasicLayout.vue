@@ -1,7 +1,7 @@
 <template>
 <div class="layout ">
     <header class="layout-header">
-      <h1>在线作业协作及评分系统</h1>
+      <h1>在线协作及评分系统</h1>
       <!-- <tButton /> -->
     </header>
     <div class="layout-main">
@@ -29,8 +29,8 @@ const currentComponent=computed(()=>{
             return auth;
         case 'student':
             return student;
-        case 'teacher':
-            return teacher;
+        /* case 'teacher':
+            return teacher; */
     }
 })
 </script>

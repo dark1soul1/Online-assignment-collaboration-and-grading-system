@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL='';
+const BASE_URL='http://172.20.10.2:8080';
 
 const instance=axios.create({
     baseURL:BASE_URL,
@@ -10,12 +10,13 @@ const instance=axios.create({
 
 instance.interceptors.request.use(
     config=>{
-        /* console.log(userStore.token); */
-        if(userStore.token){
+        /* console.log(userStore.token); 
+         if(userStore.token){
             config.headers.Authorization=`Bearer ${userStore.token}`;
-            /* config.headers.token=`Bearer ${userStore.token}`; */
-        }
-        /* console.log('Request Headers:', config.headers); */
+            /* config.headers.token=`Bearer ${userStore.token}`; 
+        } 
+         console.log('Request Headers:', config.headers); 
+         */
         config.headers['Content-Type']='application/json';
         return config;
     },
