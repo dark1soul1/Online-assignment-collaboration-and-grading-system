@@ -30,7 +30,7 @@
           <el-form :model="gradingForm" label-width="80px">
             <el-form-item label="评分">
               <el-rate
-                 v-model="gradingForm.score"
+                v-model="gradingForm.score"
                 :texts="['差', '较差', '一般', '良好', '优秀']"
                 show-text
               />
@@ -64,69 +64,138 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { getSubmission, gradeWork, updateGrade } from '../../api/index';
+import { ElMessage } from 'element-plus';
 
 const submissionList = ref([
   {
+    id: 1,
     studentName: '张三',
-    studentId: '2021001',
-    filePath: './',
-    submissionTime: '2023-05-10 14:30',
-    content: '这里是学生提交的作业内容...'
+    studentId: '2023001',
+    submissionTime: '2023-10-01 10:00:00',
+    filePath: '/submissions/2023001_assignment1.txt',
+    content: '这是张三的作业内容'
   },
   {
+    id: 2,
     studentName: '李四',
-    studentId: '2021002',
-    filePath: './',
-    submissionTime: '2023-05-11 09:15',
-    content: '这里是另一个学生提交的作业内容...'
+    studentId: '2023002',
+    submissionTime: '2023-10-01 11:30:00',
+    filePath: '/submissions/2023002_assignment1.txt',
+    content: '这是李四的作业内容'
+  },
+  {
+    id: 3,
+    studentName: '王五',
+    studentId: '2023003',
+    submissionTime: '2023-10-01 14:45:00',
+    filePath: '/submissions/2023003_assignment1.txt',
+    content: '这是王五的作业内容'
   }
-])
+]);
 
-const dialogVisible = ref(false)
-const currentHomework = ref({})
-const gradingForm = ref({
-  score: 0,
-  comment: ''
-})
-
-const previewDialogVisible = ref(false); // 新增：控制预览对话框的显示
-const previewContent = ref(''); // 新增：存储预览内容
-
-const handleGrade = (row) => {
-  currentHomework.value = row
-  dialogVisible.value = true
-}
-
-const handlePreview = (row) => {
-  previewContent.value = row.content; // 设置预览内容为当前作业的 content
-  previewDialogVisible.value = true; // 显示预览对话框
-}
-
-const submitGrading = () => {
-  ElMessage.success('批改结果已提交')
-  dialogVisible.value = false
-}
-
-/* 
-onMounted(async () => {
+/* const fetchSubmissionList = async () => {
   try {
-    const response = await getSubmission({ tid: 1, aid: 1 }); // 修改为对象形式传递参数
-    if (response.code === 0) {
+    const response = await getSubmission({ tid: 1, aid: 1 }); // 假设教师ID为1，作业ID为1
+    if (response.code === 0 && response.data) {
       submissionList.value = response.data.map(item => ({
         studentName: `学生${item.userId}`,
         studentId: item.userId,
         submissionTime: item.submissionTime,
-        filePath: item.filePath
+        filePath: item.filePath || '无文件',
+        content: item.content || '无内容'
       }));
     } else {
       ElMessage.error(response.msg || '获取提交记录失败');
     }
   } catch (error) {
     ElMessage.error('网络错误，请稍后重试');
+    console.error('获取提交记录失败:', error);
   }
+}; */
+
+
+const dialogVisible = ref(false);
+const currentHomework = ref({});
+const gradingForm = ref({
+  score: 0,
+  comment: '',
+  submissionId: null,
+  gradeId: null,
+  gradedBy: 1 // 假设教师ID为1
 });
- */
+
+const handleGrade = (row) => {
+  currentHomework.value = row;
+  gradingForm.value.submissionId = row.id;
+  gradingForm.value.gradeId = row.gradeId || null; // 如果有现有评分ID，则更新评分
+  gradingForm.value.score = row.score || 0;
+  gradingForm.value.comment = row.feedback || '';
+  dialogVisible.value = true;
+};
+
+const handlePreview = (row) => {
+  previewContent.value = row.content;
+  previewDialogVisible.value = true;
+};
+
+const submitGrading = async () => {
+  try {
+    const data = {
+      submissionId: gradingForm.value.submissionId,
+      score: gradingForm.value.score,
+      feedback: gradingForm.value.comment,
+      gradedBy: gradingForm.value.gradedBy
+    };
+
+    if (gradingForm.value.gradeId) {
+      // 更新评分
+      data.gradeId = gradingForm.value.gradeId;
+      await updateGrade(data);
+      ElMessage.success('评分已更新');
+    } else {
+      // 新增评分
+      await gradeWork(data);
+      ElMessage.success('评分已提交');
+    }
+
+    dialogVisible.value = false;
+    // 刷新提交记录列表
+    const response = await getSubmission({ tid: 1, aid: 1 });
+    if (response.code === 0) {
+      submissionList.value = response.data;
+    }
+  } catch (error) {
+    ElMessage.error('评分失败，请稍后重试');
+    console.error('评分失败:', error);
+  }
+};
+
+const previewDialogVisible = ref(false);
+const previewContent = ref('');
+
+/* 
+onMounted(async () => {
+  try {
+    fetchSubmissionList();
+    const response = await getSubmission({ tid: 1, aid: 1 }); // 调用接口，传入教师ID和作业ID
+    if (response.code === 0) {
+      submissionList.value = response.data.map(item => ({
+        studentName: `学生${item.userId}`,
+        studentId: item.userId,
+        submissionTime: item.submissionTime,
+        filePath: item.filePath,
+        content: item.content || '无内容' // 如果接口返回的内容为空，则显示默认值
+      }));
+    } else {
+      ElMessage.error(response.msg || '获取提交记录失败');
+    }
+  } catch (error) {
+    ElMessage.error('网络错误，请稍后重试');
+    console.error('接口调用失败:', error);
+  }
+}); */
 </script>
 
 <style scoped>

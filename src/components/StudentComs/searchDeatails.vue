@@ -9,61 +9,82 @@
         :data="messageList" 
         rom-key="id" 
         class="searchTable">
-            <el-table-column prop="username" label="名称" />
+            <el-table-column prop="userName" label="名称" />
             <el-table-column prop="sex" label="性别" :formatter="formatSex" />
             <el-table-column prop="signature" label="个性签名" />
             <el-table-column prop="hobbies" label="爱好" />
             <el-table-column prop="phone" label="电话" />
             <el-table-column prop="email" label="邮箱" />
             <el-table-column label="操作" width="250">
-                <template>
-                  <el-button>加入</el-button>
+                <template #default="{ row }">
+                  <el-button @click="handleJoin(row)">加入</el-button>
                 </template>
             </el-table-column>
         </el-table>
     </div>
 </template>
 <script setup>
-import { onMounted, ref,watch,computed } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useUserStore } from '../../store';
-import { joinTeam} from '../../api';
+import { searchTeacher, joinTeam } from '../../api';
 import { ElMessage } from 'element-plus';
 
-const userStore=useUserStore();
-const messageList=ref([]);
-const userId=computed(()=>userStore.id);
+const userStore = useUserStore();
+const messageList = ref([
+    { id: 1, userName: '张三', sex: '1', signature: '热爱编程', hobbies: '篮球', phone: '12345678901', email: 'zhangsan@example.com' },
+    { id: 2, userName: '李四', sex: '0', signature: '喜欢音乐', hobbies: '吉他', phone: '12345678902', email: 'lisi@example.com' },
+    { id: 3, userName: '王五', sex: '1', signature: '运动达人', hobbies: '跑步', phone: '12345678903', email: 'wangwu@example.com' }
+]);
+const userId = computed(() => userStore.id);
 
-let searchString=computed(()=>userStore.searchString);
+let searchString = computed(() => userStore.searchString);
 
-async function fetchMessage(){
-    try{
-        console.log("searchString:"+searchString.value);
+/* async function fetchMessage() {
+    try {
+        console.log("searchString:" + searchString.value);
         console.log(userId.value);
-        const teacherMessage=await joinTeam({
-            tname:searchString.value
+        const teacherMessage = await searchTeacher({
+            tname: searchString.value
         });
-        messageList.value=teacherMessage.data.data;
+        messageList.value = teacherMessage.data.data;
+    } catch (error) {
+        ElMessage.warning("搜索失败，请稍后再试：" + error);
     }
-    catch(error){
-        ElMessage.warning("搜索失败，请稍后再试："+error);
+} */
+
+watch(searchString, async () => {
+    const allowedPattern = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/;
+    console.log("watchSeachString:" + searchString.value);
+    if (searchString.value && searchString.value.length >= 2 && allowedPattern.test(searchString.value)) {
+        await fetchMessage();
     }
-}
+});
 
-watch(searchString,async()=>{
-  const allowedPattern = /^[a-zA-Z0-9\u4e00-\u9fa5]+$/;
-  console.log("watchSeachString:"+searchString.value);
-  if(searchString.value&&searchString.value.length>=2&&allowedPattern.test(searchString.value)){
-    await fetchMessage();
-  }
-})
+const formatSex = (value) => {
+    return value === "1" ? "男" : "女";
+};
 
-const formatSex=(value)=>{
-    return value==="1"?"男":"女";
-}
+/* async function handleJoin(row) {
+    try {
+        const result = await joinTeam({
+            tname: row.userName,
+            sid: userId.value
+        });
+        if (result.data.code === 0) {
+            ElMessage.success("加入成功！");
+        } else {
+            ElMessage.error(result.data.msg || "加入失败，请重试！");
+        }
+    } catch (error) {
+        ElMessage.error("加入失败：" + error);
+    }
+} */
 
-onMounted(async()=>{
-    await fetchMessage();
-})
+/* onMounted(async () => {
+    if (searchString.value && searchString.value.length >= 2) {
+        await fetchMessage();
+    }
+}); */
 </script>
 
 <style scoped>

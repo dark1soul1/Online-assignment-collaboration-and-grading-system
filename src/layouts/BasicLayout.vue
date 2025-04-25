@@ -22,6 +22,7 @@ import student from './StudentLayout.vue';
 import teacher from './TeacherLayout.vue';
 
 const userstore=useUserStore();
+    
 
 const currentComponent=computed(()=>{
     switch(userstore.cur_component){

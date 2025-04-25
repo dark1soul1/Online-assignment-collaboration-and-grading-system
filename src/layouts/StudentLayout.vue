@@ -28,11 +28,12 @@
         </template>
       </el-dropdown>
       <el-select-v2
-      v-model="value"
-      :options="options"
-      placeholder="请选择你的团队"
-      size="large"
-      style="width: 240px"
+        v-model="selectedTeamId"
+        :options="teamOptions"
+        placeholder="请选择你的团队"
+        size="large"
+        style="width: 240px"
+        @change="handleTeamChange"
       />
     </div>
   </nav>
@@ -42,30 +43,65 @@
 </template>
 
 <script setup>
-import { ref,computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
-import { useUserStore } from '../store';
+import { useUserStore } from '../store/index';
 import { ElMessage } from 'element-plus';
 import HomePage from '../components/StudentComs/HomePage.vue';
 import ProjectInfo from '../components/StudentComs/ProjectInfo.vue';
 import CollaborationCom from '../components/StudentComs/CollaborationCom.vue';
-import CommunicationCom from '../components/StudentComs/CommunicationCom.vue';
+import CommunicationCom from '../components/StudentComs/GradeCom.vue';
 import userProfile from '../components/userProfile.vue';
 import searchDeatails from '../components/StudentComs/searchDeatails.vue';
+import { getTeam } from '../api/index';
 
 const userStore = useUserStore();
-const whichIsActive=computed(()=>{
-  return userStore.cur_module;
-}) 
+const whichIsActive = computed(() => userStore.cur_module);
 const searchQuery = ref('');
-const userName=ref(userStore.name);
+const userName = ref(userStore.name);
+
+const teamOptions = ref([
+  { value: '1', label: '团队A' },
+  { value: '2', label: '团队B' },
+  { value: '3', label: '团队C' }
+]);
+const selectedTeamId = ref(null);
+
+/* const fetchTeams = async () => {
+  try {
+    const response = await getTeam(userStore.id);
+    if (response.data.code === 0) {
+      const teams = response.data.data || [];
+      teamOptions.value = teams.map(team => ({
+        value: team.id,
+        label: team.teamName
+      }));
+      if (teams.length > 0) {
+        selectedTeamId.value = teams[0].id; 
+        userStore.currentTeamId = teams[0].id; 
+      }
+    } else {
+      ElMessage.warning(response.data.msg || '获取团队信息失败');
+    }
+  } catch (error) {
+    ElMessage.error('获取团队信息失败，请稍后再试');
+  }
+}; */
+
+const handleTeamChange = (teamId) => {
+  userStore.currentTeamId = teamId; 
+};
+
+/* onMounted(() => {
+  fetchTeams(); 
+}); */
 
 const items = ref([
-  { label: '首页' ,     action: () =>userStore.cur_module=0 },
-  { label: '项目信息',  action: () =>userStore.cur_module=1 },
-  { label: '在线协作',  action: () =>userStore.cur_module=2 },
-  { label: '在线沟通',  action: () =>userStore.cur_module=3 },
-  { label: '个人中心',  action: () =>userStore.cur_module=4 }
+  { label: '首页',action: () =>userStore.cur_module=0 },
+  { label: '获取资源',action: () =>userStore.cur_module=1 },
+  { label: '在线协作',action: () =>userStore.cur_module=2 },
+  { label: '在线沟通',action: () =>userStore.cur_module=3 },
+  { label: '个人中心',action: () =>userStore.cur_module=4 }
 ]);
 
 const currentComponent=computed(()=>{

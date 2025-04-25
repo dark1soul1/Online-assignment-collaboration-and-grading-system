@@ -15,6 +15,7 @@ export const useUserStore=defineStore('user',{
         userAvatar:'../assets/img/userimg.png',
         isRegister:false,
         cur_component:'student',
+        currentTeamId:'',
         cur_module:0,
         proIsActive:1,
         searchString:''

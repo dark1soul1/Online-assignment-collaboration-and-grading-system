@@ -7,11 +7,11 @@
     >
       <el-menu-item index="assign-homework">
         <el-icon><document /></el-icon>
-        <span>发布作业</span>
+        <span>发布任务</span>
       </el-menu-item>
       <el-menu-item index="grade-homework">
         <el-icon><edit /></el-icon>
-        <span>批改作业</span>
+        <span>批改任务</span>
       </el-menu-item>
       <el-menu-item index="dashboard">
         <el-icon><data-line /></el-icon>

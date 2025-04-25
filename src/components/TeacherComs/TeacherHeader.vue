@@ -22,7 +22,6 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>个人信息</el-dropdown-item>
                 <el-dropdown-item @click="handleLogout()">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -42,8 +41,8 @@ import { useUserStore } from '../../store';
 const router = useRouter();
 const userStore = useUserStore();
 
-const teacherName = ref('张老师')
-const currentCourse = ref('软件工程')
+const teacherName = ref(userStore.name)
+const currentCourse = ref('请选择当前团队')
 const courses = ref([
   '1',
   '2',
@@ -54,8 +53,8 @@ const courses = ref([
 ])
 
 const handleLogout = () => {
-  router.push('/home');
   userStore.handleLogout;
+  router.push('/home');
 }
 </script>
 
