@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref,onMounted,nextTick } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import { useUserStore } from '../store';
 import * as echarts from 'echarts';
 
@@ -111,24 +111,39 @@ onMounted(async () => {
   await nextTick();
   carouselItems.value.forEach((item, index) => {
     const chartDom = document.getElementById('chart-' + item.id);
-    const myChart = echarts.init(chartDom,'wonderland');
+    const myChart = echarts.init(chartDom);
+
+    // 新增: 为每个图表设置不同的主题和数据
+    const themes = ['wonderland', 'roma', 'macarons', 'dark'];
+    const theme = themes[index % themes.length];
+
     const option = {
-      series : [
-                {
-                    name: '访问来源',
-                    type: 'pie',    // 设置图表类型为饼图
-                    radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-                    data:[          // 数据数组，name 为数据项名称，value 为数据项值
-                        {value:235, name:'图块1'},
-                        {value:274, name:'图块2'},
-                        {value:310, name:'图块3'},
-                        {value:335, name:'图块4'},
-                        {value:400, name:'图块5'}
-                    ]
-                }
-            ]
+      title: {
+        left: 'center',
+        textStyle: {
+          color: '#333',
+          fontSize: 16,
+          fontWeight: 'bold'
+        }
+      },
+      series: [
+        {
+          name: '数据',
+          type: 'pie',
+          radius: '55%',
+          data: [
+            { value: Math.floor(Math.random() * 1000) + 100, name: '图块1' }, // 随机生成数据
+            { value: Math.floor(Math.random() * 1000) + 100, name: '图块2' },
+            { value: Math.floor(Math.random() * 1000) + 100, name: '图块3' },
+            { value: Math.floor(Math.random() * 1000) + 100, name: '图块4' },
+            { value: Math.floor(Math.random() * 1000) + 100, name: '图块5' }
+          ]
+        }
+      ]
     };
+
     myChart.setOption(option);
+    myChart.setTheme(theme); // 设置主题
   });
 });
 </script>
@@ -172,10 +187,12 @@ onMounted(async () => {
   padding: 16px;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 200px; /* 新增: 固定高度 */
 }
+
 .chart {
   width: 100%;
-  height: 120px;
+  height: 100%; /* 新增: 占满父容器 */
 }
 
 .slogan-wrap {

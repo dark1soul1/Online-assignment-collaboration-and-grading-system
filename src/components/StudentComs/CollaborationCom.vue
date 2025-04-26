@@ -117,8 +117,6 @@ onMounted(async () => {
         console.error('获取学生作业失败:', error);
     }
 }); */
-// 静态数据代替后端接口返回的数据
-// 注：此静态数据用于模拟后端返回的任务列表，包含历史任务、当前任务和未开放任务。
 const studentWorkData = ref([
     // 历史任务示例
     {

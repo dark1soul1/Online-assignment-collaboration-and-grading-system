@@ -51,7 +51,10 @@ export async function getTeam(sid){
 export async function getTeamInfo(tid){
   return request ('GET',`/teamStid`,tid);
 }
-
+//学生查团队资源
+export async function getTeamResource(tid){
+  return request ('GET',`/getFile`,tid);
+}
 //学生查评分
 export async function getScore(sid){
   return request ('GET',`grades/${sid}`);
@@ -79,7 +82,7 @@ export async function deleteWork(id){
 
 //老师查询提交记录
 export async function getSubmission(data){
-  return request ('GET',`/submission/`,data);
+  return request ('GET',`/submission`,data);
 }
 //老师提交记录查文件
 export async function getFile(id){
@@ -95,7 +98,7 @@ export async function updateGrade(data){
   return request ('PUT',`/grade`,data);
 }
 
-//老师查团队
+//老师查团队信息
 export async function getTeamTid(tid){
   return request ('GET',`/teamTid`,tid);
 }

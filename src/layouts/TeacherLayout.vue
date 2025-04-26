@@ -9,6 +9,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import TeacherHeader from '../components/TeacherComs/TeacherHeader.vue'
 import TeacherSidebar from '../components/TeacherComs/TeacherSidebar.vue'
 import TeacherMain from '../components/TeacherComs/TeacherMain.vue'

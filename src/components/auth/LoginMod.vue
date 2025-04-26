@@ -32,7 +32,9 @@ import { ref } from 'vue';
 import { useUserStore } from '../../store';
 import { ElForm, ElFormItem, ElInput, ElButton,ElMessage } from 'element-plus';
 import { login } from '../../api/index';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const loginFormRef = ref(null);
 const userStore = useUserStore();
 let isRegister = userStore.isRegister;
@@ -88,13 +90,18 @@ const handleLogin = async () => {
   };
   console.log('Response Body:', responseBody);
   let response = await login(responseBody);
-  console.log('Response:', response);
+  /* console.log('Response:', response); */
+  userStore.updateUserInfo(response.data.data);
   if (response.data.code===200) {
-    if(response.data.data.role==='teacher')router.push(`/teacher/assign-homework`);
-    userStore.handleLogin(response.data);
-    ElMessage.success('登录成功');
-  } else {
-    throw new Error(response.msg || '登录失败');
+    if(response.data.data.role==='教师')router.push(`/teacher/assign-homework`);
+    userStore.handleLogin(response.data.data);
+    /* ElMessage.success('登录成功'); */
+  }
+  else if(response.data.code===500){
+    ElMessage.success('账号或密码错误');
+  }
+  else {
+    throw new Error(response.msg);
   }
 };
 

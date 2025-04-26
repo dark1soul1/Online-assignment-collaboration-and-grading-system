@@ -14,7 +14,7 @@ export const useUserStore=defineStore('user',{
         phone:'1234567890',
         userAvatar:'../assets/img/userimg.png',
         isRegister:false,
-        cur_component:'student',
+        cur_component:'auth',
         currentTeamId:'',
         cur_module:0,
         proIsActive:1,
@@ -41,6 +41,7 @@ export const useUserStore=defineStore('user',{
         },
         handleLogout(){
             this.cur_component='auth';
+            this.cur_module=0;
             this.id='0',
             this.account='',
             this.name='游客',
@@ -59,6 +60,18 @@ export const useUserStore=defineStore('user',{
         switchToSearchDetails(value){
             this.searchString=value,
             this.cur_module=5
+        },
+        updateUserInfo(value){
+            this.id=value.userId;
+            this.account=value.account;
+            this.name=value.userName;
+            this.password=value.password;
+            this.userRole=value.role;
+            this.signature=value.signature;
+            this.hobbies=value.hobbies;
+            this.sex=value.sex;
+            this.email=value.email;
+            this.phone=value.phone;
         }
     }
 })

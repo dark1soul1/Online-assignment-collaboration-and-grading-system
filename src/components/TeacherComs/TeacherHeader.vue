@@ -44,16 +44,17 @@ const userStore = useUserStore();
 const teacherName = ref(userStore.name)
 const currentCourse = ref('请选择当前团队')
 const courses = ref([
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6'
+  '团队1',
+  '团队2',
+  '团队3',
+  '团队4',
+  '团队5',
+  '团队6'
 ])
 
 const handleLogout = () => {
-  userStore.handleLogout;
+  userStore.handleLogout();
+  userStore.cur_component='auth';
   router.push('/home');
 }
 </script>

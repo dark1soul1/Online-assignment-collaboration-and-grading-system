@@ -10,7 +10,7 @@
         <el-radio-group v-model="form.type">
           <el-radio value="text">文本任务</el-radio>
           <el-radio value="code">代码任务</el-radio>
-          <el-radio value="file">附件任务</el-radio>
+          <!-- <el-radio value="file">附件任务</el-radio> -->
         </el-radio-group>
       </el-form-item>
 
@@ -30,7 +30,7 @@
         />
       </el-form-item>
 
-      <el-form-item label="附件" v-if="form.type === 'file'">
+      <!-- <el-form-item label="附件" v-if="form.type === 'file'">
         <el-upload
           action="#"
           :auto-upload="false"
@@ -38,7 +38,7 @@
         >
           <el-button>选择文件</el-button>
         </el-upload>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="任务描述">
         <el-input
@@ -92,7 +92,7 @@ const submitForm = async () => {
       createdBy: form.value.createdBy
     });
 
-    if (response.code === 0) {
+    if (response.code === 200) {
       ElMessage.success('任务发布成功！');
       form.value = {
         title: '',

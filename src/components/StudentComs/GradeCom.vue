@@ -41,7 +41,7 @@
   </el-card>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { getScore } from '../../api/index';
@@ -95,18 +95,17 @@ const scoreData = ref([
   }
 ]);
 
-/* const fetchScore = async () => {
+ const fetchScore = async () => {
   loading.value = true;
   error.value = '';
   try {
-    const response = await getScore(sid);
-    if (response.code === 0 && response.data) {
-      scoreData.value = response.data;
+    const response = await getScore(7);
+    if (response.data.code === 200) {
+      scoreData.value = response.data.data;
     } else {
       error.value = response.msg || '未找到评分记录';
     }
   } catch (err) {
-    error.value = '网络错误，请稍后重试';
     console.error('获取评分失败:', err);
   } finally {
     loading.value = false;
@@ -116,7 +115,7 @@ const scoreData = ref([
 // 页面加载时获取评分数据
 onMounted(() => {
   fetchScore();
-}); */
+}); 
 
 </script>
 

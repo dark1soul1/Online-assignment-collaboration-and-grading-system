@@ -5,18 +5,22 @@
           <el-tab-pane label="基本信息" name="basicInfo">
             <el-card shadow="always" class="profile-card">
               <div class="avatar-container">
-                <img :src="userInfo.avatar" alt="Avatar" class="avatar" />
+                <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" class="avatar" />
               </div>
               <div class="info-container">
-                <h2>{{ userInfo.name }}</h2>
+                <h2>{{ userStore.name }}</h2>
                 <p><strong>账号:</strong> {{ userInfo.account }}</p>
               </div>
             </el-card>
           </el-tab-pane>
 
+
           <el-tab-pane label="修改个性信息" name="userForm">
             <el-card shadow="always" class="profile-card">
               <el-form :model="userForm" label-width="100px">
+                <el-form-item label="用户名">
+                  <el-input v-model="userForm.name"></el-input>
+                </el-form-item>
                 <el-form-item label="性别">
                   <el-select v-model="userForm.sex" placeholder="请选择你的性别">
                     <el-option label="男" value="1" />
@@ -73,15 +77,13 @@
 </template>
   
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed,onMounted } from 'vue';
 import { useUserStore } from '../store';
 import { ElHeader, ElMain, ElTabs, ElTabPane, ElCard, ElForm, ElFormItem, ElInput, ElButton, ElMessage } from 'element-plus';
-import { updatePersonalInfo } from '../api';
+import { updatePersonalInfo,getPersonalAvatar,getPersonalInfo } from '../api';
 
 const userStore = useUserStore();
 const activeTab = ref('basicInfo');
-const integer=computed(() => userStore.id);
-const radio1=ref(userStore.sex);
 
 const userInfo = reactive({
   id: userStore.id,
@@ -92,7 +94,7 @@ const userInfo = reactive({
   hobbies: userStore.hobbies,
   email: userStore.email,
   phone: userStore.phone,
-  avatar: userStore.userAvatar
+  avatar: userStore.userAvatar 
 });
 
 const userForm = reactive({
@@ -124,8 +126,8 @@ const validateConfirmPassword = (rule, value, callback) => {
 const passwordRules = {
   newPassword: [
     { required: true, message: '请输入新密码', trigger: 'blur' },
-    { min: 8, message: '密码长度至少为8个字符', trigger: 'blur' },
-    { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, message: '密码必须包括数字、大小写字母和特殊字符', trigger: 'blur' }
+    { min: 6, message: '密码长度至少为6个字符', trigger: 'blur' },
+    { pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, message: '密码必须包括数字、字母和特殊字符', trigger: 'blur' }
   ],
   confirmNewPassword: [
     { required: true, message: '请确认新密码', trigger: 'blur' },
@@ -137,7 +139,7 @@ const updateProfile = async () => {
   let payload = {};
   switch (activeTab.value) {
     case 'userForm':
-      payload = { signature: userForm.signature, hobbies: userForm.hobbies };
+      payload = { userName:userForm.name,signature: userForm.signature, hobbies: userForm.hobbies };
       break;
     case 'contactInfo':
       payload = { phone: contactForm.phone, email: contactForm.email };
@@ -151,13 +153,17 @@ const updateProfile = async () => {
   }
 
   try {
-    await updatePersonalInfo({integer,...payload});
+    await updatePersonalInfo({ id: userStore.id, ...payload });
     userStore.updateUserInfo({ ...userInfo, ...payload });
     ElMessage.success('信息已更新');
   } catch (error) {
-    ElMessage.error('更新失败，请重试');
+    console.error('更新失败:', error);
   }
 };
+onMounted(async() => {
+  const response =await getPersonalInfo(userStore.id);
+  userStore.updateUserInfo(response.data.data);
+});
 </script>
   
 <style scoped>

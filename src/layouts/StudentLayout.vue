@@ -16,7 +16,7 @@
                 <img src="../assets//icons//searchIcon.jpg" class="icon-picture" alt="">
             </button>
       </div>
-      <el-avatar :icon="UserFilled" />
+      <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
       <el-dropdown class="el-dropdown-container">
         <span class="el-dropdown-link">
           {{ userName }}
@@ -54,11 +54,13 @@ import CommunicationCom from '../components/StudentComs/GradeCom.vue';
 import userProfile from '../components/userProfile.vue';
 import searchDeatails from '../components/StudentComs/searchDeatails.vue';
 import { getTeam } from '../api/index';
+import { getPersonalAvatar } from '../api/index';
 
 const userStore = useUserStore();
 const whichIsActive = computed(() => userStore.cur_module);
 const searchQuery = ref('');
 const userName = ref(userStore.name);
+
 
 const teamOptions = ref([
   { value: '1', label: '团队A' },
@@ -67,10 +69,11 @@ const teamOptions = ref([
 ]);
 const selectedTeamId = ref(null);
 
-/* const fetchTeams = async () => {
+const fetchTeams = async () => {
   try {
-    const response = await getTeam(userStore.id);
-    if (response.data.code === 0) {
+    const response = await getTeam({ sid: userStore.id });
+    console.log(response);
+    if (response.data.code === 200) {
       const teams = response.data.data || [];
       teamOptions.value = teams.map(team => ({
         value: team.id,
@@ -84,17 +87,14 @@ const selectedTeamId = ref(null);
       ElMessage.warning(response.data.msg || '获取团队信息失败');
     }
   } catch (error) {
-    ElMessage.error('获取团队信息失败，请稍后再试');
+    console.error('获取团队信息失败:', error);
   }
-}; */
+};
 
 const handleTeamChange = (teamId) => {
   userStore.currentTeamId = teamId; 
 };
 
-/* onMounted(() => {
-  fetchTeams(); 
-}); */
 
 const items = ref([
   { label: '首页',action: () =>userStore.cur_module=0 },
@@ -146,13 +146,16 @@ const performSearch=()=>{
 };
 
 
-const initials = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
-
-const value = ref()
-const options = Array.from({ length: 1000 }).map((_, idx) => ({
-  value: `Option ${idx + 1}`,
-  label: `${initials[idx % 10]}${idx}`,
-}))
+onMounted(async () => {
+  fetchTeams();
+  try {
+    const response = await getPersonalAvatar({ id: userStore.id });
+    console.log(response.data);
+    userStore.userAvatar=response.data;
+  } catch (error) {
+    console.error('获取头像失败:', error);
+  }
+});
 </script>
 
 <style scoped>

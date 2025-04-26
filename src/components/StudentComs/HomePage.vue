@@ -1,13 +1,11 @@
 <template>
     <div class="task-list">
-      <!-- 任务卡片 -->
       <el-card 
         v-for="task in tasks" 
         :key="task.id"
         class="task-card"
         :class="{ 'high-priority': task.priority === 'high' }"
       >
-        <!-- 任务头 -->
         <div class="task-header">
           <div class="tags">
             <el-tag type="info">{{ task.task }}</el-tag>
@@ -24,7 +22,6 @@
           </h3>
         </div>
   
-        <!-- 时间状态 -->
         <div class="time-status" :style="timeStatusStyle(task)">
           <div class="time-left">
             <span class="icon">⏳</span>
@@ -43,7 +40,6 @@
           </div>
         </div>
   
-        <!-- 进度条 -->
         <div class="progress-container">
           <el-progress 
             :percentage="task.progress" 

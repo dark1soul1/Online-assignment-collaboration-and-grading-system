@@ -211,7 +211,6 @@ onMounted(async () => {
 const calculateStats = () => {
   // 这里可以根据实际需求计算统计数据
   // 例如：计算平均完成率、平均分、已提交人数、未提交人数等
-  // 这里使用静态数据作为示例
   completionRate.value = 85;
   averageScore.value = 78.5;
   submittedCount.value = 24;
